@@ -28,7 +28,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
    INIT
 ========================= */
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 /* =========================
    UPLOADS SETUP
