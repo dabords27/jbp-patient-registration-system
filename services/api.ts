@@ -1,12 +1,14 @@
+const API_BASE = "https://jbp-backend-w5py.onrender.com";
+
 export interface PatientPayload {
   patLastname: string;
   patFirstname: string;
   patMiddlename: string;
-  patBirthdate: string; // MM/DD/YYYY
+  patBirthdate: string;
 }
 
 export async function registerPatient(payload: PatientPayload) {
-  const res = await fetch("/api/patient/register", {
+  const res = await fetch(`${API_BASE}/api/patient/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -22,7 +24,7 @@ export async function registerPatient(payload: PatientPayload) {
 }
 
 export async function checkApiStatus() {
-  const res = await fetch("/api/health");
+  const res = await fetch(`${API_BASE}/api/health`);
 
   if (!res.ok) {
     throw new Error("API not reachable");
