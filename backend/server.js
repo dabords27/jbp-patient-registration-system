@@ -16,13 +16,15 @@ const supabaseKey = process.env.SUPABASE_SECRET_KEY;
 
 console.log("RUNNING FILE:", import.meta.url);
 console.log("SUPABASE URL:", supabaseUrl);
+console.log("NODE_ENV:", process.env.NODE_ENV);
 
-if (!supabaseKey) {
-  console.error("❌ SUPABASE_SECRET_KEY missing in .env");
+if (!supabaseUrl || !supabaseKey) {
+  console.error("❌ Missing Supabase environment variables");
   process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
+
 
 /* =========================
    INIT
