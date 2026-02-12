@@ -11,7 +11,7 @@ import fs from "fs";
 /* =========================
    SUPABASE
 ========================= */
-const supabaseUrl = "https://irsriyhmskbeojrdkvuc.supabase.co";
+const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SECRET_KEY;
 
 console.log("RUNNING FILE:", import.meta.url);
