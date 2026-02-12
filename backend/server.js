@@ -75,8 +75,8 @@ async function generatePatientID() {
 
   const { data, error } = await supabase
     .from("tblpatientinfo")
-    .select("pkpatientid")
-    .like("pkpatientid", `${prefix}%`);
+    .select("pk_pat_mrn_id")
+    .like("pk_pat_mrn_id", `${prefix}%`);
 
   if (error) throw error;
 
@@ -89,33 +89,33 @@ async function generatePatientID() {
 ========================= */
 app.post("/api/patient/register", async (req, res) => {
   try {
-    const { patLastname, patFirstname, patMiddlename, patBirthdate } = req.body;
+    const { pat_lastname, pat_firstname, pat_middlename, pat_birthdate } = req.body;
 
-    if (!patLastname || !patFirstname || !patBirthdate) {
+    if (!pat_lastname || !pat_firstname || !pat_birthdate) {
       return res.status(400).json({
         success: false,
         message: "Lastname, Firstname, and Birthdate are required.",
       });
     }
 
-    let formattedBirthdate = patBirthdate;
+    let formattedBirthdate = pat_birthdate;
 
-    if (patBirthdate.includes("/")) {
-      const [month, day, year] = patBirthdate.split("/");
+    if (pat_birthdate.includes("/")) {
+      const [month, day, year] = pat_birthdate.split("/");
       formattedBirthdate = `${year}-${month}-${day}`;
     }
 
-    const pkPatientID = await generatePatientID();
+    const pk_pat_mrn_id = await generatePatientID();
 
     const { data, error } = await supabase
       .from("tblpatientinfo")
       .insert([
         {
-          pkpatientid: pkPatientID,
-          patlastname: patLastname,
-          patfirstname: patFirstname,
-          patmiddlename: patMiddlename || null,
-          patbirthdate: formattedBirthdate,
+          pk_pat_mrn_id: pk_pat_mrn_id,
+          pat_lastname: pat_lastname,
+          pat_firstname: pat_firstname,
+          pat_middlename: pat_middlename || null,
+          pat_birthdate: formattedBirthdate,
         },
       ])
       .select();
@@ -152,17 +152,49 @@ app.post("/api/ocr", upload.single("image"), async (req, res) => {
       data: { text },
     } = await Tesseract.recognize(req.file.path, "eng");
 
-    res.json({ rawText: text });
+    const lines = text
+      .split("\n")
+      .map(l => l.trim())
+      .filter(Boolean);
+
+    let pat_lastname = "";
+    let pat_firstname = "";
+    let pat_middlename = "";
+    let pat_birthdate = "";
+
+    const nameLine = lines.find(l => l.includes(","));
+
+    if (nameLine) {
+      const parts = nameLine.split(",");
+      pat_lastname = parts[0]?.trim() || "";
+
+      const firstParts = parts[1]?.trim().split(" ");
+      pat_firstname = firstParts?.[0] || "";
+      pat_middlename = firstParts?.[1] || "";
+    }
+
+    const dateRegex = /(19|20)\d{2}[\/-]\d{2}[\/-]\d{2}/;
+    const dateMatch = text.match(dateRegex);
+
+    if (dateMatch) {
+      const [year, month, day] = dateMatch[0].split(/[\/-]/);
+      pat_birthdate = `${year}-${month}-${day}`;
+    }
+
+    res.json({
+      pat_lastname,
+      pat_firstname,
+      pat_middlename,
+      pat_birthdate,
+      raw_text: text
+    });
 
   } catch (err) {
     console.error("OCR ERROR:", err);
     res.status(500).json({ error: "OCR failed" });
-  } finally {
-    if (req.file?.path && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
   }
 });
+
 
 /* =========================
    GET PATIENTS

@@ -1,8 +1,8 @@
 export interface OCRResult {
-  patLastname: string;
-  patFirstname: string;
-  patMiddlename: string;
-  patBirthdate: string; // MM/DD/YYYY
+  pat_lastname: string;
+  pat_firstname: string;
+  pat_middlename: string;
+  pat_birthdate: string; // MM/DD/YYYY
 }
 
 export async function performOCR(file: File): Promise<OCRResult> {
@@ -21,9 +21,9 @@ export async function performOCR(file: File): Promise<OCRResult> {
   const data = await response.json();
 
   return {
-    patLastname: data.patLastname || "",
-    patFirstname: data.patFirstname || "",
-    patMiddlename: data.patMiddlename || "",
-    patBirthdate: data.patBirthdate || "",
+    pat_lastname: data.pat_lastname || "",
+    pat_firstname: data.pat_firstname || "",
+    pat_middlename: data.pat_middlename || "",
+    pat_birthdate: data.pat_birthdate || "",
   };
 }

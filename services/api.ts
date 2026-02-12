@@ -1,11 +1,4 @@
-const API_BASE = "https://jbp-backend-w5py.onrender.com";
-
-export interface PatientPayload {
-  patLastname: string;
-  patFirstname: string;
-  patMiddlename: string;
-  patBirthdate: string;
-}
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export async function registerPatient(payload: PatientPayload) {
   const res = await fetch(`${API_BASE}/api/patient/register`, {

@@ -7,13 +7,15 @@ import Toast from './components/Toast';
 import Modal from './components/Modal';
 
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const App: React.FC = () => {
 const [showErrors, setShowErrors] = useState(false);
   const [formData, setFormData] = useState<PatientFormData>({
-    patLastname: '',
-    patFirstname: '',
-    patMiddlename: '',
-    patBirthdate: '',
+    pat_lastname: '',
+    pat_firstname: '',
+    pat_middlename: '',
+    pat_birthdate: '',
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -40,9 +42,9 @@ const [showErrors, setShowErrors] = useState(false);
 
   // Name fields: allow letters, space, hyphen, apostrophe only
   if (
-    name === "patLastname" ||
-    name === "patFirstname" ||
-    name === "patMiddlename"
+    name === "pat_lastname" ||
+    name === "pat_firstname" ||
+    name === "pat_middlename"
   ) {
     const cleanedValue = value
       .replace(/[^A-Za-z\s'-]/g, "")
@@ -66,10 +68,10 @@ const [showErrors, setShowErrors] = useState(false);
     const result = await performOCR(file);
 
     setFormData({
-      patLastname: result.patLastname,
-      patFirstname: result.patFirstname,
-      patMiddlename: result.patMiddlename,
-      patBirthdate: result.patBirthdate,
+      pat_lastname: result.pat_lastname,
+      pat_firstname: result.pat_firstname,
+      pat_middlename: result.pat_middlename,
+      pat_birthdate: result.pat_birthdate,
     });
 
     setToast({
@@ -98,7 +100,7 @@ const handleBirthdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
   setFormData(prev => ({
     ...prev,
-    patBirthdate: value,
+    pat_birthdate: value,
   }));
 };
 
@@ -106,9 +108,9 @@ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setShowErrors(true);
 
-  const birthdate = formData.patBirthdate.trim();
+  const birthdate = formData.pat_birthdate.trim();
 
-  if (!formData.patLastname || !formData.patFirstname || !birthdate) {
+  if (!formData.pat_lastname || !formData.pat_firstname || !birthdate) {
     setToast({
       message: "Please fill in all required fields.",
       type: "error",
@@ -116,7 +118,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     return;
   }
 
-  let formattedBirthdate = formData.patBirthdate;
+  let formattedBirthdate = formData.pat_birthdate;
 
   if (/^\d{4}-\d{2}-\d{2}$/.test(formattedBirthdate)) {
     const [year, month, day] = formattedBirthdate.split("-");
@@ -140,7 +142,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   try {
     const response = await registerPatient({
       ...formData,
-      patBirthdate: formattedBirthdate,
+      pat_birthdate: formattedBirthdate,
     });
 
     if (response.success) {
@@ -156,10 +158,10 @@ const handleSubmit = async (e: React.FormEvent) => {
   
 
       setFormData({
-        patLastname: "",
-        patFirstname: "",
-        patMiddlename: "",
-        patBirthdate: "",
+        pat_lastname: "",
+        pat_firstname: "",
+        pat_middlename: "",
+        pat_birthdate: "",
       });
 
       setShowErrors(false);
@@ -187,11 +189,11 @@ const handleSubmit = async (e: React.FormEvent) => {
           <div className="flex items-center gap-2">
   <img
     src="/JBP_LOGO.png"
-    alt="DABORDS SYSTEM"
+    alt="DABORDS SYSTEM v1.0"
     className="w-10 h-10 rounded-full object-cover"
   />
   <span className="font-bold text-2xl tracking-tight text-blue-800">
-    DABORDS SYSTEM
+    DABORDS SYSTEM V1.0
   </span>
 </div>
 
@@ -246,11 +248,11 @@ const handleSubmit = async (e: React.FormEvent) => {
 </label>
 
 <input
-  name="patLastname"
-  value={formData.patLastname}
+  name="pat_lastname"
+  value={formData.pat_lastname}
   onChange={handleInputChange}
   className={`w-full px-4 py-2 bg-gray-50 border rounded-lg font-semibold outline-none focus:ring-2
-    ${showErrors && !formData.patLastname
+    ${showErrors && !formData.pat_lastname
       ? "border-red-500 focus:ring-red-500"
       : "border-gray-200 focus:ring-blue-500"
     }`}
@@ -262,11 +264,11 @@ const handleSubmit = async (e: React.FormEvent) => {
 </label>
 
 <input
-  name="patFirstname"
-  value={formData.patFirstname}
+  name="pat_firstname"
+  value={formData.pat_firstname}
   onChange={handleInputChange}
   className={`w-full px-4 py-2 bg-gray-50 border rounded-lg font-semibold outline-none focus:ring-2
-    ${showErrors && !formData.patFirstname
+    ${showErrors && !formData.pat_firstname
       ? "border-red-500 focus:ring-red-500"
       : "border-gray-200 focus:ring-blue-500"
     }`}
@@ -280,8 +282,8 @@ const handleSubmit = async (e: React.FormEvent) => {
 </label>
 
               <input
-                name="patMiddlename"
-                value={formData.patMiddlename}
+                name="pat_middlename"
+                value={formData.pat_middlename}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg font-semibold focus:ring-2 focus:ring-blue-500 outline-none"
               />
@@ -294,13 +296,13 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 <input
   type="text"
-  name="patBirthdate"
+  name="pat_birthdate"
   placeholder="MM/DD/YYYY"
-  value={formData.patBirthdate}
+  value={formData.pat_birthdate}
   onChange={handleBirthdateChange}
   inputMode="numeric"
   className={`w-full px-4 py-2 bg-gray-50 border rounded-lg font-semibold outline-none focus:ring-2
-    ${showErrors && !formData.patBirthdate
+    ${showErrors && !formData.pat_birthdate
       ? "border-red-500 focus:ring-red-500"
       : "border-gray-200 focus:ring-blue-500"
     }`}
