@@ -1,0 +1,7 @@
+{
+  "name": "JBP Patient Registration System",
+  "description": "A production-ready patient registration system featuring Gemini-powered OCR, Facebook-inspired UI, and SQL Server integration.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
