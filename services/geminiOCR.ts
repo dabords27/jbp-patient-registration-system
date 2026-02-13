@@ -1,16 +1,10 @@
-
-export interface OCRResult {
-  pat_lastname: string;
-  pat_firstname: string;
-  pat_middlename: string;
-  pat_birthdate: string; // MM/DD/YYYY
-}
+import { API_URL } from "../config";
 
 export async function performOCR(file: File): Promise<OCRResult> {
   const formData = new FormData();
   formData.append("image", file);
 
-  const response = await fetch("/api/ocr", {
+  const response = await fetch(`${API_URL}/api/ocr`, {
     method: "POST",
     body: formData,
   });
