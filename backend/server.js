@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+
 import { createClient } from "@supabase/supabase-js";
 import Tesseract from "tesseract.js";
 import express from "express";
@@ -45,6 +46,7 @@ const upload = multer({ dest: "uploads/" });
 ========================= */
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /* =========================
    HEALTH CHECK

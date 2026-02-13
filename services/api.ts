@@ -1,4 +1,6 @@
-const API_BASE = import.meta.env.VITE_API_BASE;
+
+const API_BASE = import.meta.env.VITE_API_URL;
+
 
 export async function registerPatient(payload: PatientPayload) {
   const res = await fetch(`${API_BASE}/api/patient/register`, {

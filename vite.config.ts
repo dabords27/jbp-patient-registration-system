@@ -1,3 +1,4 @@
+import { API_URL } from "../config"; 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 

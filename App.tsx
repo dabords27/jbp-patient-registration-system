@@ -5,8 +5,10 @@ import { performOCR } from './services/geminiOCR';
 import { registerPatient, checkApiStatus } from './services/api';
 import Toast from './components/Toast';
 import Modal from './components/Modal';
+import { API_URL } from "../config"; 
 
 
+console.log("DEV API URL:", import.meta.env.VITE_API_URL);
 const API_BASE = import.meta.env.VITE_API_BASE;
 const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const App: React.FC = () => {

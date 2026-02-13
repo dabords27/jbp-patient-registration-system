@@ -1,3 +1,4 @@
+
 export interface OCRResult {
   pat_lastname: string;
   pat_firstname: string;
